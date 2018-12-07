@@ -12,10 +12,12 @@ The eCX API allows users to update various values in an entity via a PATCH opera
 
 Within the eCX Modules (APWG fed and supported) there are both date discovered and date modified query parameters.  Within Workgroups (APWG member created, fed and supported) there, at a minimum, will be date modified, with the potential for other date fields.  Any date field will have a ranging option available for it.  All possible eCX API query parameters are in the [eCX API Documentation](https://ecrimex.net/api) tab off the main menu, or on a menu tab within each Workgroups home area. 
 
-The query parameter names for date modified are mod_date_start and mod_date_end.  For date discovered the query parameter names are dd_date_start and dd_date_end, again all of these parameters take an integer epoch date value - ie `dd_date_start=1544211463` (converts to  Friday, December 7, 2018 11:37:43 AM GMT-08:00)
+The query parameter names for date modified are mod_date_start and mod_date_end.  For date dis1covered the query parameter names are dd_date_start and dd_date_end, again all of these parameters take an integer epoch date value - ie `dd_date_start=1544211463` (converts to  Friday, December 7, 2018 11:37:43 AM GMT-08:00)
+
+You can use the `dd_start_date` and/or `mod_start_date` to tell the eCX API to return you all entities between the start date and now.
 
 ### CSV Output: ###
-The eCX API supports CSV for the `/phish` eCX API endpoint when using the `container=csv` query parameter
+The eCX API natively supports CSV output for the `/phish` eCX API endpoint when using the `container=csv` query parameter
 
 
 ### Step 1: ###
@@ -23,12 +25,33 @@ Know the date ranges (date, time, and timezone) for beginning and ending values.
 
 ### Step 2: ###
 Know your eCX API token key.  Your eCX API token key can be found on your [eCX profile page](https://ecrimex.net/users/update) by clicking on your name in the header menu.  This eCX API token will go in the header of your GET request using a key/value pair 
-```javascript
-    "Authorization: <your eCX API otken key goes here",
+```
+    "Authorization: <your eCX API token key goes here>",
     "Content-Type: application/json"
 ```
-Note that we set the Content-Type in the header as well, we're sending the eCX API JSON data, and getting CSV back.
-
+Note that we set the Content-Type in the header as well, we're sending the eCX API JSON data, and getting CSV back via using the `container` param.
 
 ### Step 4: ###
 
+Pass your header information in, calling:
+
+```https://api.ecrimex.net/phish?mod_date_start=1541030400&mod_date_end=1543622399&container=csv```
+
+A cURL query:
+```
+curl --request GET \
+   --url 'https://api.ecrimex.net/phish?mod_date_start=1541030400&mod_date_end=1543622399&container=csv' \
+   --header 'Authorization: <your eCX API token key goes here>' \
+   --header 'Content-Type: application/json'
+```
+
+A wget query:
+
+```
+wget --quiet \
+   --method GET \
+   --header 'Authorization: <your eCX API token key goes here>' \
+   --header 'Content-Type: application/json' \
+   --output-document \
+   - 'https://api.ecrimex.net/phish?mod_date_start=1541030400&mod_date_end=1543622399&container=csv'
+```
